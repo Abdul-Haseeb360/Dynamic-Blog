@@ -45,6 +45,21 @@ export default function BlogPosts({ initialPosts }: BlogPostsProps) {
           </article>
         ))
       )}
+      <button
+        onClick={() =>
+          handleNewPost({
+            id: posts.length + 1,
+            title: "New Post",
+            excerpt: "This is a new post",
+            createdAt: new Date().toISOString(),
+            content: "",
+            updatedAt: ""
+          })
+        }
+        className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50"
+      >
+        Add New Post
+      </button>
       <div className="mt-8">
         <Link
           href="/create "

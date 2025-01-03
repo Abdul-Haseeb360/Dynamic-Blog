@@ -1,66 +1,73 @@
-'use client'
+"use client";
+import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-import { useState } from 'react'
-import { createPost, Post } from '@/app/lib/Posts'
-
-interface CreatePostModalProps {
-  isOpen: boolean
-  onClose: () => void
-  onPostCreated: (post: Post) => void
+interface CreatePostModelProps {
+  onClose: () => void;
+  createPost: (title: string, content: string, image: File | null) => Promise<{ id: string; title: string; content: string; }>;
 }
 
-export default function CreatePostModal({ isOpen, onClose, onPostCreated }: CreatePostModalProps) {
-  const [title, setTitle] = useState('')
-  const [content, setContent] = useState('')
+const CreatePostModel: React.FC<CreatePostModelProps> = ({ onClose, createPost }) => {
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
+  const [error, setError] = useState('');
+  const [success, setSuccess] = useState('');
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    const newPost = await createPost({
-      title, content,
-      image: null
-    })
-    onPostCreated(newPost)
-    setTitle('')
-    setContent('')
-    onClose()
-  }
+    e.preventDefault();
+    setError('');
+    setSuccess('');
 
-  if (!isOpen) return null
+    try {
+      await createPost(title, content, null);
+
+      setSuccess('Post created successfully!');
+      setTitle('');
+      setContent('');
+
+      // Redirect to the blog page after a short delay
+      setTimeout(() => {
+        router.push('/blog');
+      }, 2000);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError('An unknown error occurred');
+      }
+    }
+  };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4">
-      <div className="bg-white rounded-lg p-6 w-full max-w-md">
-        <h2 className="text-2xl font-bold mb-4">Create New Post</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700">
-              Title
-            </label>
+    <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75">
+      <div className="bg-white rounded-lg shadow-xl p-6 w-full max-w-md">
+        <h2 className="text-xl font-bold mb-4">Create a New Post</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="mb-4">
+            <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
             <input
-              type="text"
               id="title"
+              type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              required
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
             />
           </div>
-          <div>
-            <label htmlFor="content" className="block text-sm font-medium text-gray-700">
-              Content
-            </label>
+          <div className="mb-4">
+            <label htmlFor="content" className="block text-sm font-medium text-gray-700">Content</label>
             <textarea
               id="content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
-              required
+              className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
               rows={5}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-300 focus:ring focus:ring-blue-200 focus:ring-opacity-50"
-            ></textarea>
+            />
           </div>
-          <div className="flex justify-end space-x-2">
+          {error && <p className="text-red-500 mb-4">{error}</p>}
+          {success && <p className="text-green-500 mb-4">{success}</p>}
+          <div className="flex justify-end space-x-4">
             <button
-              type="button"
               onClick={onClose}
               className="px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
@@ -76,6 +83,7 @@ export default function CreatePostModal({ isOpen, onClose, onPostCreated }: Crea
         </form>
       </div>
     </div>
-  )
-}
+  );
+};
 
+export default CreatePostModel;

@@ -8,13 +8,19 @@ async function getPosts() {
   try {
     const data = await readFile(POSTS_FILE, 'utf8');
     return JSON.parse(data);
-  } catch (error) {
+  } catch {
     return [];
   }
 }
 
-async function savePosts(posts: any) {
+async function savePosts(posts: Post[]) {
   await writeFile(POSTS_FILE, JSON.stringify(posts, null, 2));
+}
+
+interface Post {
+  id: number;
+  title: string;
+  content: string;
 }
 
 export async function POST(request: Request) {
@@ -33,16 +39,28 @@ export async function POST(request: Request) {
     await savePosts(posts);
 
     return NextResponse.json({ message: 'Post created successfully', post });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to create post' }, { status: 500 });
   }
 }
 
-export async function GET() {
+export async function GET(request: Request) {
   try {
-    const posts = await getPosts();
-    return NextResponse.json(posts);
-  } catch (error) {
+    const { searchParams } = new URL(request.url);
+    const id = searchParams.get('id');
+
+    if (id) {
+      const posts = await getPosts();
+      const post = posts.find((post: { id: number; }) => post.id === parseInt(id, 10));
+      if (!post) {
+        return NextResponse.json({ error: 'Post not found' }, { status: 404 });
+      }
+      return NextResponse.json(post);
+    } else {
+      const posts = await getPosts();
+      return NextResponse.json(posts);
+    }
+  } catch {
     return NextResponse.json({ error: 'Failed to fetch posts' }, { status: 500 });
   }
 }
@@ -61,7 +79,7 @@ export async function DELETE(request: Request) {
     await savePosts(updatedPosts);
 
     return NextResponse.json({ message: 'Post deleted successfully' });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to delete post' }, { status: 500 });
   }
 }
@@ -88,7 +106,7 @@ export async function PUT(request: Request) {
     await savePosts(posts);
 
     return NextResponse.json({ message: 'Post updated successfully', post: posts[postIndex] });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to update post' }, { status: 500 });
   }
 }
