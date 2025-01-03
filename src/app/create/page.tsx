@@ -4,6 +4,14 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import Loading from '@/app/Loeading';
 
 const CreatePostPage = () => {
+  return (
+    <Suspense fallback={<Loading />}>
+      <CreatePostPageContent />
+    </Suspense>
+  );
+};
+
+const CreatePostPageContent = () => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [error, setError] = useState('');
@@ -61,18 +69,16 @@ const CreatePostPage = () => {
   };
 
   return (
-    <Suspense fallback={<Loading />}>
-      <CreatePostForm
-        title={title}
-        setTitle={setTitle}
-        content={content}
-        setContent={setContent}
-        error={error}
-        success={success}
-        handleSubmit={handleSubmit}
-        postId={postId}
-      />
-    </Suspense>
+    <CreatePostForm
+      title={title}
+      setTitle={setTitle}
+      content={content}
+      setContent={setContent}
+      error={error}
+      success={success}
+      handleSubmit={handleSubmit}
+      postId={postId}
+    />
   );
 };
 

@@ -7,7 +7,7 @@ interface CreatePostModelProps {
   createPost: (title: string, content: string, image: File | null) => Promise<{ id: string; title: string; content: string; }>;
 }
 
-const CreatePostModel: React.FC<CreatePostModelProps> = ({ onClose, createPost }) => {
+const CreatePostModel: React.FC<CreatePostModelProps> = ({ onClose }) => {
   const [title, setTitle] = useState('');
   const [content, setContent] = useState('');
   const [error, setError] = useState('');
