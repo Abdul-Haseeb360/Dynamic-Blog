@@ -1,5 +1,4 @@
 "use client";
-const BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000';
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Loading from '@/app/Loeading';
@@ -40,13 +39,10 @@ const CreatePostPageContent = () => {
     formData.append('content', content);
 
     try {
-      const response = await fetch(
-        `${BASE_URL}/api/upload`, 
-        {
-          method: 'POST', 
-          body: formData
-        }
-      );;
+      const response = await fetch(postId ? `${process.env.NEXT_PUBLIC_API_URL}/api/upload?id=${postId}` : `${process.env.NEXT_PUBLIC_API_URL}/api/upload`, {
+        method: postId ? 'PUT' : 'POST',
+        body: formData,
+      });
 
       if (!response.ok) {
         if (response.status === 404) {
