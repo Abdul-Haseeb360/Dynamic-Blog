@@ -1,7 +1,7 @@
 "use client";
 import React, { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import Loading from '../Loeading';
+import Loading from '@/app/Loeading';
 
 const CreatePostPage = () => {
   const [title, setTitle] = useState('');
@@ -61,7 +61,7 @@ const CreatePostPage = () => {
   };
 
   return (
-    <Suspense fallback={<Loading/>}>
+    <Suspense fallback={<Loading />}>
       <CreatePostForm
         title={title}
         setTitle={setTitle}

@@ -20,7 +20,7 @@ const CreatePostModel: React.FC<CreatePostModelProps> = ({ onClose, createPost }
     setSuccess('');
 
     try {
-      await createPost(title, content, null);
+      const newPost = await createPost(title, content, null);
 
       setSuccess('Post created successfully!');
       setTitle('');
