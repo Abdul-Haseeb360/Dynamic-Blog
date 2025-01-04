@@ -1,5 +1,5 @@
 import BlogPosts from "./Components/BlogPosts";
-import { getPosts } from "./lib/Posts";
+// import { getPosts } from "./lib/Posts";
 import HeroSection from './Components/HeroSection'
 
 export default  async function Home() {
