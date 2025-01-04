@@ -39,10 +39,10 @@ const CreatePostPageContent = () => {
     formData.append('content', content);
 
     try {
-      const response = await fetch(postId ? `${process.env.NEXT_PUBLIC_API_URL}/api/upload?id=${postId}` : `${process.env.NEXT_PUBLIC_API_URL}/api/upload`, {
-        method: postId ? 'PUT' : 'POST',
-        body: formData,
-      });
+        const response = await fetch(postId ? `${process.env.NEXT_PUBLIC_API_URL}/api/upload?id=${postId}` : `${process.env.NEXT_PUBLIC_API_URL}/api/upload`, {
+          method: postId ? 'PUT' : 'POST',
+          body: formData,
+        });
 
       if (!response.ok) {
         if (response.status === 404) {

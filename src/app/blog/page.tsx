@@ -19,7 +19,7 @@ const BlogPage = () => {
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await fetch('http://localhost:3000/api/upload');
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/upload`);
         if (!response.ok) {
           throw new Error('Failed to fetch posts');
         }
@@ -41,7 +41,7 @@ const BlogPage = () => {
 
   const handleDelete = async (id: number) => {
     try {
-      const response = await fetch(`http://localhost:3000/api/upload?id=${id}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/upload?id=${id}`, {
         method: 'DELETE',
       });
 

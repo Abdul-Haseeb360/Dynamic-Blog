@@ -9,7 +9,7 @@ export interface Post {
 }
 
 export async function getPosts(): Promise<Post[]> {
-  const response = await fetch('http://localhost:3000/api/posts')
+  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/posts`)
   if (!response.ok) {
     throw new Error('Failed to fetch posts')
   }

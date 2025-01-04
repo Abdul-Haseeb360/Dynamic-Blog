@@ -1,17 +1,18 @@
-"use client"
-import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+"use client";
+import React, { useEffect, useState } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 
-const PostDetailPage = ({ params }: { params: { id: string } }) => {
+const PostDetailPage = () => {
   const [post, setPost] = useState<{ id: number; title: string; content: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const { id } = useParams();
   const router = useRouter();
 
   useEffect(() => {
     const fetchPost = async () => {
       try {
-        const response = await fetch(`http://localhost:3000/api/upload?id=${params.id}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/upload?id=${id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch post');
         }
@@ -29,7 +30,7 @@ const PostDetailPage = ({ params }: { params: { id: string } }) => {
     };
 
     fetchPost();
-  }, [params.id]);
+  }, [id]);
 
   if (loading) {
     return <p>Loading...</p>;
