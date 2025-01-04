@@ -3,7 +3,7 @@ import { getPosts } from "./lib/Posts";
 import HeroSection from './Components/HeroSection'
 
 export default  async function Home() {
-  const posts = await getPosts()
+  // const posts = await getPosts()
   return (
     <div>
       <HeroSection/>
